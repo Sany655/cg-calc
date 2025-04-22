@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cgpa Calculate</title>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -22,10 +22,14 @@
                         <label for="text"><b>Course Title :</b></label>
                         <select name="Course" id="course-name" class="course" required>
                             <option value="Course">Course Title</option>
-                            <option value="Software Engneering And System Analysis And Design">Software Engneering And System Analysis And Design</option>
-                            <option value="Database Management System Laboratory">Database Management System Laboratory </option>
-                            <option value="Micropocessor And Assembly Language">Micropocessor And Assembly Language </option>
-                            <option value="Micropocessor And Assembly Language Laboratory">Micropocessor And Assembly Language Laboratory</option>
+                            <option value="Software Engneering And System Analysis And Design">Software Engneering And
+                                System Analysis And Design</option>
+                            <option value="Database Management System Laboratory">Database Management System Laboratory
+                            </option>
+                            <option value="Micropocessor And Assembly Language">Micropocessor And Assembly Language
+                            </option>
+                            <option value="Micropocessor And Assembly Language Laboratory">Micropocessor And Assembly
+                                Language Laboratory</option>
                             <option value="Web Development">Web Development</option>
                             <option value="Database Management System">Database Management System</option>
                             <option value="Math (Probability And Statistics)">Math (Probability And Statistics)</option>
@@ -86,4 +90,64 @@
 </body>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/script.js"></script>
+<script>
+    data = JSON.parse(localStorage.getItem("user"));
+    var allCourses = data?.allCourses || [];
+    var courseName = $("#course-name");
+    allCourses.forEach(function (course) {
+        var option = $("<option></option>").val(course.name).text(course.name);
+        courseName.append(option);
+    });
+    var courseCode = $("#course-code");
+    allCourses.forEach(function (course) {
+        var option = $("<option></option>").val(course.code).text(course.code);
+        courseCode.append(option);
+    });
+    var credit = $("#credit");
+    allCourses.forEach(function (course) {
+        var option = $("<option></option>").val(course.credit).text(course.credit);
+        credit.append(option);
+    });
+
+    var myCourses = data?.myCourses || [];
+    if (myCourses.length === 0) {
+        var noCourseMessage = $("<div></div>").text("No courses added yet.");
+        $("#my-courses-list").append(noCourseMessage);
+    }
+    var myCourseList = $("#my-courses-list");
+    myCourses.forEach(function (course, index) {
+        var courseDiv = $("<div></div>").attr("id", "course-" + index);
+        var courseInfo = $("<span></span>").text(course.name + " (" + course.code + ") - Credit: " + course.credit + ", Grade: " + course.grade);
+        var deleteButton = $("<button></button>").text("Delete").attr("data-index", index);
+        deleteButton.click(function () {
+            myCourses.splice(index, 1);
+            localStorage.setItem("user", JSON.stringify({ ...data, myCourses: myCourses }));
+            window.location.reload();
+        });
+        courseDiv.append(courseInfo).append(deleteButton);
+        myCourseList.append(courseDiv);
+    });
+
+
+    $("#add-course").click(function (event) {
+        event.preventDefault();
+        data = JSON.parse(localStorage.getItem("user"));
+        var name = $("#course-name").val();
+        var code = $("#course-code").val();
+        var credit = $("#credit").val();
+        var grade = $("#grade").val();
+        if (name === "" || code === "" || credit === "" || grade === "") {
+            alert("Please fill all fields!");
+            return;
+        }
+        if (isNaN(credit)) {
+            alert("Please enter valid numbers for credit and grade!");
+            return;
+        }
+        data.myCourses = data.myCourses || [];
+        localStorage.setItem("user", JSON.stringify({ ...data, myCourses: [...data.myCourses, { name: name, code: code, credit: credit, grade: grade }] }));
+        location.reload();
+    });
+</script>
+
 </html>

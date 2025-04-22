@@ -35,4 +35,19 @@
 </body>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/script.js"></script>
+<script>
+    data = JSON.parse(localStorage.getItem("user"));
+    if (data !== null && data.isLoggedIn) {
+        window.location.href = './index.html';
+    }
+    $("#login-form").submit(function (event) {
+        event.preventDefault();
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        localStorage.setItem("user", JSON.stringify({ ...data, username: username, password: password, isLoggedIn: true }));
+        window.location.href = "index.html";
+    });
+</script>
+
 </html>

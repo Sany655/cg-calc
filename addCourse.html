@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Your New Course</title>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
         </nav>
         <div class="addcourse-form">
             <div class="addcourse-body">
-                <form id="add-new-course-form" >
+                <form id="add-new-course-form">
                     <h1>ADD NEW COURSE</h1>
                     <div class="addcourse-input-box">
                         <label for="text"><b>Add Course Title :</b></label>
@@ -41,4 +41,22 @@
 </body>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/script.js"></script>
+<script>
+    data = JSON.parse(localStorage.getItem("user"));
+    data.allCourses = data.allCourses || [];
+    $("#add-new-course-form").submit(function (event) {
+        event.preventDefault();
+        var name = $("#course-name").val();
+        var code = $("#course-code").val();
+        var credit = $("#course-credit").val();
+        if (isNaN(credit)) {
+            alert("Please enter valid numbers for credit!");
+            return;
+        }
+        localStorage.setItem("user", JSON.stringify({ ...data, allCourses: [...data.allCourses, { name: name, code: code, credit: credit }] }));
+        alert("Course added successfully!");
+        window.location.href = "./cgpa.html";
+    });
+</script>
+
 </html>
