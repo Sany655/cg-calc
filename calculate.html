@@ -16,16 +16,27 @@
         </nav>
         <div class="result-form">
             <div class="result-form-body">
-                <form action="">
-                    <h1 class="result-form">FINAL RESULT</h1>
-                    <div class="input-box">
-                        <label for="text"><b id="cgpa">Your CGPA : </b></label><br>
-                    </div>
-                    <div class="input-box">
-                        <label for="password"><b id="grade">Your Grade : </b></label><br>
-                    </div>
-                    <button type="submit"><strong><a href="index.html">Thank You</a></strong></button>
-                </form>
+                <h1 class="result-form">FINAL RESULT</h1>
+                <p id="cgpa">Your CGPA : </p>
+                <p id="grade">Your Grade : </p>
+                <hr>
+                <div id="course-list" style="display: none;">
+                    <h2>Course List</h2>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;margin-bottom: 20px;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2; text-align: left;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Course Title</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Course Code</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Credit</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="course-body" style="text-align: left;">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- course list -->
+                <button id="thank-you"><strong>Thank You</strong></button>
             </div>
         </div>
     </header>
@@ -37,6 +48,12 @@
     var myCourses = data?.myCourses || [];
     var totalCredit = 0;
     var totalGradePoints = 0;
+
+    // click on thank you button will erase the myCourses from local storage and redirect to index.html
+    $("#thank-you").click(function () {
+        localStorage.setItem("user", JSON.stringify({ ...data, myCourses: [] }));
+        window.location.href = "index.html";
+    });
 
     if (myCourses.length === 0) {
         $("#cgpa").text("No courses found.");
@@ -123,6 +140,18 @@
         // Display results
         $("#cgpa").text("CGPA: " + cgpa.toFixed(2));
         $("#grade").text("Grade: " + gradeLetter);
+
+        myCourses.forEach(function (course) {
+            var row = $("<tr></tr>");
+            var courseTitle = $("<td style='padding:10px;'></td>").text(course.name);
+            var courseCode = $("<td></td>").text(course.code);
+            var courseCredit = $("<td></td>").text(course.credit);
+            var courseGrade = $("<td></td>").text(course.grade);
+
+            row.append(courseTitle, courseCode, courseCredit, courseGrade);
+            $("#course-list").show();
+            $("#course-body").append(row);
+        });
     }
 </script>
 

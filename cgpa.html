@@ -76,7 +76,6 @@
                     <div>
                         <button id="add-course"><strong>Add Course</strong></button>
                     </div>
-                    <div id="my-courses-list"></div>
                     <div>
                         <button type="button"><strong><a href="calculate.html">Calculate</a></strong></button>
                     </div>
@@ -109,24 +108,6 @@
         credit.append(option);
     });
 
-    var myCourses = data?.myCourses || [];
-    if (myCourses.length === 0) {
-        var noCourseMessage = $("<div></div>").text("No courses added yet.");
-        $("#my-courses-list").append(noCourseMessage);
-    }
-    var myCourseList = $("#my-courses-list");
-    myCourses.forEach(function (course, index) {
-        var courseDiv = $("<div></div>").attr("id", "course-" + index);
-        var courseInfo = $("<span></span>").text(course.name + " (" + course.code + ") - Credit: " + course.credit + ", Grade: " + course.grade);
-        var deleteButton = $("<button></button>").text("Delete").attr("data-index", index);
-        deleteButton.click(function () {
-            myCourses.splice(index, 1);
-            localStorage.setItem("user", JSON.stringify({ ...data, myCourses: myCourses }));
-            window.location.reload();
-        });
-        courseDiv.append(courseInfo).append(deleteButton);
-        myCourseList.append(courseDiv);
-    });
 
 
     $("#add-course").click(function (event) {
